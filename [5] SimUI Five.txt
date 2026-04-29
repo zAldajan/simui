@@ -1,0 +1,235 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (context) => MyAppState(),
+      child: MaterialApp(
+        title: 'Namer App',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 245, 186, 8)),
+        ),
+        home: MyHomePage(),
+      ),
+    );
+  }
+}
+
+/*==============================
+================================
+================================
+================================
+================================
+*/
+
+class MyAppState extends ChangeNotifier {
+int? _character = 0;
+
+  TextEditingController inputField1 = TextEditingController();
+  TextEditingController inputField2 = TextEditingController();
+
+  var text1 = "";
+
+  void MysetState(int? value){
+    _character = value;
+    notifyListeners();
+  }
+
+  
+  void greeting(){
+    text1 = inputField1.text;
+    print(_character);
+    notifyListeners();
+  }
+
+}
+
+/*==============================
+================================
+================================
+================================
+================================
+*/
+
+// ...
+
+class MyHomePage extends StatefulWidget {
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  
+    var selectedIndex = 0; // create variable
+  @override
+  Widget build(BuildContext context) {
+
+    var page;
+
+    if (selectedIndex == 0){
+      page = HomePage();
+    }
+    else if (selectedIndex == 1){
+      page = ListPage();
+    }
+
+    return Scaffold(
+      body: Row(
+        children: [
+          SafeArea(
+            child: NavigationRail   (
+              extended: false,
+              destinations: [
+                NavigationRailDestination(
+                  icon: Icon(Icons.home),
+                  label: Text('Home'),
+                ),
+                NavigationRailDestination(
+                  icon: Icon(Icons.list),
+                  label: Text('Favorites'),
+                ),
+              
+              ],
+              selectedIndex: selectedIndex,
+              onDestinationSelected: (value) {
+                setState(() {
+                  selectedIndex = value;
+                });;
+              },
+            ),
+          ),
+          Expanded(
+            child: Container(
+              color: Theme.of(context).colorScheme.primaryContainer,
+              child: page,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+// page one
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    var appState = context.watch<MyAppState>();
+    
+
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          RadioListTile<int>(
+          title: const Text('sum  +'),
+          value: 0,
+          groupValue: appState._character,
+          onChanged: (int? value) {
+             {
+              appState.MysetState(value);
+            };
+          },
+        ),
+        // 3. Add second RadioListTile
+        RadioListTile<int>(
+          title: const Text('sub  -'),
+          value: 1,
+          groupValue: appState._character,
+          onChanged: (int? value) {
+             {
+              appState.MysetState(value);
+            };
+          },
+        ),
+        RadioListTile<int>(
+          title: const Text('multiply   *'),
+          value: 2,
+          groupValue: appState._character,
+          onChanged: (int? value) {
+             {
+              appState.MysetState(value);
+            };
+          },
+        ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(width: 200,child: TextField(controller: appState.inputField1,)),
+              SizedBox(width: 200,),
+              SizedBox(width: 200,child: TextField(controller: appState.inputField1,)),
+            ],
+          ),
+          ElevatedButton(onPressed: appState.greeting, child: Text("count")),
+          SizedBox(height: 10),
+          Text(appState.text1),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(width: 10), 
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+enum Pet { dog, cat }
+// page two
+
+class ListPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    var appState = context.watch<MyAppState>();
+   
+
+    return Column(
+      children: <Widget>[ RadioListTile<int>(
+          title: const Text('sum  +'),
+          value: 0,
+          groupValue: appState._character,
+          onChanged: (int? value) {
+             {
+              appState.MysetState(value);
+            };
+          },
+        ),
+        // 3. Add second RadioListTile
+        RadioListTile<int>(
+          title: const Text('sub  -'),
+          value: 1,
+          groupValue: appState._character,
+          onChanged: (int? value) {
+             {
+              appState.MysetState(value);
+            };
+          },
+        ),
+        RadioListTile<int>(
+          title: const Text('multiply   *'),
+          value: 2,
+          groupValue: appState._character,
+          onChanged: (int? value) {
+             {
+              appState.MysetState(value);
+            };
+          },
+        ),
+      ],
+    );
+  }
+}
+
