@@ -32,8 +32,8 @@ class MyApp extends StatelessWidget {
 
 class MyAppState extends ChangeNotifier {
 
-  TextEditingController inputField1 = TextEditingController();
-  TextEditingController inputField2 = TextEditingController();
+  TextEditingController inputField1 = TextEditingController(); // for Text, use inputField1.text
+  TextEditingController inputField2 = TextEditingController(); // for Text, use inputField2.text
 
   var textBox1 = 0;
 
@@ -162,5 +162,4 @@ class ListPage extends StatelessWidget {
     return Text("");
   }
 }
-
 
