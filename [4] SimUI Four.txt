@@ -32,23 +32,28 @@ class MyApp extends StatelessWidget {
 
 class MyAppState extends ChangeNotifier {
 
-  TextEditingController inputField1 = TextEditingController();
-  TextEditingController inputField2 = TextEditingController();
+  TextEditingController inputField1 = TextEditingController(); // linked with inputField1 .. use inputfield1.text for input value
+  TextEditingController inputField2 = TextEditingController(); // linked with inputField2 .. use inputfield2.text for input value
 
-  var textBox1 = 0;
+  var textBox1 = 0; // linked with TextBox1
 
   
-  void sum(){
+  // linked with sum button
+  void sum(){ 
 
     notifyListeners();
   }
 
-  void sub(){
+
+// linked with sub button
+  void sub(){ 
 
     notifyListeners();
   }
 
-  void multiply(){
+  
+// linked with multiply button
+  void multiply(){  
 
     notifyListeners();
   }
