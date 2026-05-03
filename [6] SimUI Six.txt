@@ -41,9 +41,12 @@ class MyAppState extends ChangeNotifier {
   var rightButtonLabel = "";  //  label of the right button
 
   
-  var equation = "";  //  assigned to the equation text box 
-  var resultMessage = ""; // assigned to the result message text box
+  var equation = "";  //  linked to equation text box 
+  var resultMessage = ""; // linked to result message text box
+  
+  
   var correctAnswer = 0;
+  
   
   
   // the three buttons will call this function on pressed
@@ -64,6 +67,7 @@ class MyAppState extends ChangeNotifier {
   }
 
 
+  // linked with Next button
   void next(){
 
 
@@ -175,7 +179,7 @@ class HomePage extends StatelessWidget {
             ],
           ),
           SizedBox(height: 100),
-          Container(child: InputDecorator(decoration: InputDecoration(labelText: 'resurltMessage',border: OutlineInputBorder(),),child: Text(appState.resultMessage),), width: 200,),
+          Container(child: InputDecorator(decoration: InputDecoration(labelText: 'resultMessage',border: OutlineInputBorder(),),child: Text(appState.resultMessage),), width: 200,),
           
           SizedBox(height: 100),
           ElevatedButton(onPressed: appState.next, child: Text("Next")),
