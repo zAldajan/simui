@@ -48,7 +48,7 @@ Meaning if the user chooses sum, radioButton = 0 | if the user chooses sub, radi
   TextEditingController inputField2 = TextEditingController(); // linked with inputField2 .. use inputfield2.text for input value
 
   
-  var textBox1 = ""; // linked with TextBox1
+  var textBox1 = 0; // linked with TextBox1
 
 
 
