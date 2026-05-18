@@ -1,0 +1,297 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'dart:math';
+
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (context) => MyAppState(),
+      child: MaterialApp(
+        title: 'Namer App',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 245, 186, 8)),
+        ),
+        home: MyHomePage(),
+      ),
+    );
+  }
+}
+
+/*==============================
+================================
+================================
+================================
+================================
+*/
+
+class MyAppState extends ChangeNotifier {
+
+  // this function for applying radioButton values. don't change anything in this function
+  void MysetState(int? value){
+    radioButton = value;
+    notifyListeners();
+  }
+
+
+int? radioButton = 0; /* linked with Radio Buttons .. buttons sum, sub and multiply have values 0, 1 and 2. 
+Meaning if the user chooses sum, radioButton = 0 | if the user chooses sub, radioButton = 1 | if the user chooses multiply, radioButton = 2*/
+  
+TextEditingController limit = TextEditingController(); // linked with Limit .. use limit.text for input value
+// limit is String. To converst it to integer, use int.parse(limit.text)
+
+
+  var random = Random();
+
+  var leftButtonLabel = "";  //  label of the left button
+  var middleButtonLabel = ""; //  label of the middle button
+  var rightButtonLabel = "";  //  label of the right button
+
+  
+  var equation = "";  //  assigned to the equation text box 
+  var resultMessage = ""; // assigned to the result message text box
+  var correctAnswer = 0;
+
+  
+  // the three buttons will call this function on pressed
+  void answerLeftButton(){
+    if (leftButtonLabel == correctAnswer.toString()){
+        resultMessage = "Correct";
+    }
+    else{
+      resultMessage = "Wrong";
+    }
+    notifyListeners();
+  }
+
+
+  void answerMiddleButton(){
+    if (middleButtonLabel == correctAnswer.toString()){
+        resultMessage = "Correct";
+    }
+    else{
+      resultMessage = "Wrong";
+    }
+
+    notifyListeners();
+  }
+
+  void answerRightButton(){
+    if (rightButtonLabel == correctAnswer.toString()){
+        resultMessage = "Correct";
+    }
+    else{
+      resultMessage = "Wrong";
+    }
+
+    notifyListeners();
+  }
+
+
+  void next(){
+    var number1 = random.nextInt(20);  // Generate a random number and store it in number1 
+    var number2 = random.nextInt(20);  // Generate a random number and store it in number2
+    equation = "${number1} + ${number2}"; // display the two chosen random numbers in equation text box
+    correctAnswer = number1 + number2; // store the correct answer which is the sum of two chosen random numbers
+    
+    
+    // create choices list which contains the correct answer and another two random numbers in range -+5 from correctAnswer
+    List<int> choices = [correctAnswer,
+     (correctAnswer - 5) + random.nextInt((correctAnswer + 5) - (correctAnswer - 5) + 1),
+     (correctAnswer - 5) + random.nextInt((correctAnswer + 5) - (correctAnswer - 5) + 1)];
+    
+    choices.shuffle(); // reorder the list randomly
+    
+    // assign list elements to buttons
+    leftButtonLabel = "${choices[0]}"; 
+    middleButtonLabel = "${choices[1]}"; 
+    rightButtonLabel = "${choices[2]}";
+
+    
+    resultMessage = ""; // clear resultMessage text box
+
+    notifyListeners();
+  }
+
+
+}
+
+/*==============================
+================================
+================================
+================================
+================================
+*/
+
+// ...
+
+class MyHomePage extends StatefulWidget {
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+
+class _MyHomePageState extends State<MyHomePage> {
+  
+    var selectedIndex = 0; // create variable
+  @override
+  Widget build(BuildContext context) {
+
+    var page;
+
+    if (selectedIndex == 0){
+      page = HomePage();
+    }
+    else if (selectedIndex == 1){
+      page = ListPage();
+    }
+
+    return Scaffold(
+      body: Row(
+        children: [
+          SafeArea(
+            child: NavigationRail   (
+              extended: false,
+              destinations: [
+                NavigationRailDestination(
+                  icon: Icon(Icons.home),
+                  label: Text('Home'),
+                ),
+                NavigationRailDestination(
+                  icon: Icon(Icons.list),
+                  label: Text('Favorites'),
+                ),
+              
+              ],
+              selectedIndex: selectedIndex,
+              onDestinationSelected: (value) {
+                setState(() {
+                  selectedIndex = value;
+                });;
+              },
+            ),
+          ),
+          Expanded(
+            child: Container(
+              color: Theme.of(context).colorScheme.primaryContainer,
+              child: page,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+// page one
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    var appState = context.watch<MyAppState>();
+    
+
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          RadioListTile<int>(
+          title: const Text('sum  +'),
+          value: 0,
+          groupValue: appState.radioButton,
+          onChanged: (int? value) {
+             {
+              appState.MysetState(value);
+            };
+          },
+        ),
+        // 3. Add second RadioListTile
+        RadioListTile<int>(
+          title: const Text('sub  -'),
+          value: 1,
+          groupValue: appState.radioButton,
+          onChanged: (int? value) {
+             {
+              appState.MysetState(value);
+            };
+          },
+        ),
+        RadioListTile<int>(
+          title: const Text('multiply   *'),
+          value: 2,
+          groupValue: appState.radioButton,
+          onChanged: (int? value) {
+             {
+              appState.MysetState(value);
+            };
+          },
+        ),
+        SizedBox(width: 200,child: TextField(controller: appState.limit, decoration: InputDecoration(border: OutlineInputBorder(), label: Text("Limit")),)),
+        SizedBox(height: 50),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+          Container(child: InputDecorator(decoration: InputDecoration(labelText: 'equation',border: OutlineInputBorder(),),child: Text(appState.equation),), width: 200,),
+              
+
+            ],
+          ),
+          SizedBox(height: 40),
+
+          Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+
+            children: [
+              ElevatedButton(onPressed: appState.answerLeftButton, child: Text(appState.leftButtonLabel)),
+              SizedBox(width: 20,),
+              ElevatedButton(onPressed: appState.answerMiddleButton, child: Text(appState.middleButtonLabel)),
+              SizedBox(width: 20,),
+              ElevatedButton(onPressed: appState.answerRightButton, child: Text(appState.rightButtonLabel)),
+            ],
+          ),
+          SizedBox(height: 50),
+          Container(child: InputDecorator(decoration: InputDecoration(labelText: 'resurltMessage',border: OutlineInputBorder(),),child: Text(appState.resultMessage),), width: 200,),
+          
+          SizedBox(height: 50),
+          ElevatedButton(onPressed: appState.next, child: Text("Next")),
+
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(width: 10), 
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+
+// page two
+
+class ListPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    var appState = context.watch<MyAppState>();
+
+
+    return               InputDecorator(
+              decoration: InputDecoration(
+                labelText: 'XP',
+                border: OutlineInputBorder(),
+              ),
+              child: Text('Content inside'),
+            );
+  }
+}
